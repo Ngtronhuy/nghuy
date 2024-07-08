@@ -15,6 +15,10 @@
         <activity
             android:name=".demo1.Demo1MainActivity"
             android:exported="true" >
+
+        </activity>
+        <activity android:name=".demo2.Draft21MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
