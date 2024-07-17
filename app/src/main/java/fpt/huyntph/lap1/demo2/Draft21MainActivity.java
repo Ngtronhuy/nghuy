@@ -42,7 +42,7 @@ public class Draft21MainActivity extends AppCompatActivity {
         todoDAO = new TodoDAO(this);
         todoList = todoDAO.getAllTodos();
 
-        adapter = new TodoAdapter(todoList);
+        adapter = new TodoAdapter(this,todoList,todoDAO);
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 Draft21MainActivity.this));
         recyclerView.setAdapter(adapter);

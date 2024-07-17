@@ -1,6 +1,8 @@
 package fpt.huyntph.lap1.demo2;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +13,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
+
 import fpt.huyntph.lap1.R;
 
 import java.util.List;
 
 public class TodoAdapter extends
         RecyclerView.Adapter<TodoAdapter.TodoViewHolder> {
-
     private List<Todo> todoList;
+
+
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -31,8 +37,13 @@ public class TodoAdapter extends
         this.listener = listener;
     }
 
-    public TodoAdapter(List<Todo> todoList) {
+    private Context context;
+    private TodoDAO todoDAO;
+
+    public TodoAdapter(Context context , List<Todo> todoList, TodoDAO todoDAO) {
+        this.context = context;
         this.todoList = todoList;
+        this.todoDAO = todoDAO;
     }
 
     @NonNull
@@ -63,6 +74,26 @@ public class TodoAdapter extends
                 }
             }
         });
+        holder.btnDelete.setOnClickListener(v -> {
+            showdeleteConfirmDialog(holder.getAdapterPosition());
+        });
+
+    }
+    private void showdeleteConfirmDialog(int position){
+        new AlertDialog.Builder(context)
+                .setTitle("Xac nhan xoa")
+                .setMessage("Ban co muon xoa khong?")
+                .setPositiveButton("OK" ,(dialog, which) -> deleteTodoItem(position))
+                .setNegativeButton("Cancel" , null)
+                .show();
+
+    }
+    private void deleteTodoItem(int position){
+        Todo todo = todoList.get(position);
+        todoDAO.deleteTodo(todo.getId());
+        todoList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position,todoList.size());
     }
 
     @Override
@@ -88,7 +119,7 @@ public class TodoAdapter extends
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onDeleteClick(position);
+//                            listener.onDeleteClick(position);
                         }
                     }
                 }
@@ -105,6 +136,8 @@ public class TodoAdapter extends
                     }
                 }
             });
+
         }
+
     }
 }
